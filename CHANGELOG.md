@@ -1,3 +1,10 @@
+# [1.1.0-next.4](https://github.com/inneropen/marvin-renderers-core/compare/v1.1.0-next.3...v1.1.0-next.4) (2026-07-12)
+
+
+### Bug Fixes
+
+* Resolve integration imports from dist and widen Astro peer dep ([96faa2a](https://github.com/inneropen/marvin-renderers-core/commit/96faa2a22f9d997ada7ef39bdf43657d9ee27122))
+
 # [1.1.0-next.3](https://github.com/inneropen/marvin-renderers-core/compare/v1.1.0-next.2...v1.1.0-next.3) (2026-07-12)
 
 
