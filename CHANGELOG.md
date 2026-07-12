@@ -1,3 +1,10 @@
+# [1.1.0-next.1](https://github.com/inneropen/marvin-renderers-core/compare/v1.0.1...v1.1.0-next.1) (2026-07-12)
+
+
+### Features
+
+* Add build-time renderer validation integration ([8015c27](https://github.com/inneropen/marvin-renderers-core/commit/8015c2783a0ea38af9c8df3656716b96dc19de41))
+
 ## [1.0.1](https://github.com/inneropen/marvin-renderers-core/compare/v1.0.0...v1.0.1) (2026-07-12)
 
 
