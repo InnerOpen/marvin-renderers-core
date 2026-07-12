@@ -1,13 +1,14 @@
-import type { MarvinEntry, MarvinAsset } from '@inneropen/marvin-sdk';
+import type { MarvinAsset } from '@inneropen/marvin-sdk';
+import type { RendererEntry } from './types.js';
 
 const DEFAULT_RENDERER = 'page';
 
-export function resolveRendererName(entry: MarvinEntry): string {
+export function resolveRendererName(entry: RendererEntry): string {
   return entry.entryTypeInfo?.renderer ?? DEFAULT_RENDERER;
 }
 
 export function resolveRendererConfig(
-  entry: MarvinEntry,
+  entry: RendererEntry,
   overrides?: Record<string, unknown>,
 ): Record<string, unknown> {
   const base = entry.entryTypeInfo?.config ?? {};
@@ -15,21 +16,21 @@ export function resolveRendererConfig(
   return { ...base, ...overrides };
 }
 
-export function extractBody(entry: MarvinEntry): string | undefined {
+export function extractBody(entry: RendererEntry): string | undefined {
   const body = entry.dataJson?.body;
   if (typeof body === 'string') return body;
   return entry.contentMarkdown;
 }
 
 export function extractField<T = unknown>(
-  entry: MarvinEntry,
+  entry: RendererEntry,
   key: string,
 ): T | undefined {
   return entry.dataJson?.[key] as T | undefined;
 }
 
 export function getFeaturedAsset(
-  entry: MarvinEntry,
+  entry: RendererEntry,
 ): MarvinAsset | undefined {
   const assets = entry.assets;
   if (!assets?.length) return undefined;
@@ -43,6 +44,6 @@ export function getFeaturedAsset(
   return featured ?? assets[0];
 }
 
-export function isRoutable(entry: MarvinEntry): boolean {
+export function isRoutable(entry: RendererEntry): boolean {
   return entry.entryTypeInfo?.routable !== false;
 }

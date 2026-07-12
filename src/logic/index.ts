@@ -1,5 +1,7 @@
 export type {
   CoreRendererName,
+  EntryTypeInfo,
+  RendererEntry,
   RendererProps,
   RendererRegistry,
 } from './types.js';

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import type { MarvinEntry } from '@inneropen/marvin-sdk';
+import type { RendererEntry } from '../src/logic/types.js';
 import {
   resolveRendererName,
   resolveRendererConfig,
@@ -9,7 +9,7 @@ import {
   isRoutable,
 } from '../src/logic/resolve.js';
 
-function makeEntry(overrides: Partial<MarvinEntry> = {}): MarvinEntry {
+function makeEntry(overrides: Partial<RendererEntry> = {}): RendererEntry {
   return {
     id: '1',
     title: 'Test Entry',

@@ -1,9 +1,9 @@
 ---
-import type { MarvinEntry } from '@inneropen/marvin-sdk';
+import type { RendererEntry } from '../../logic/types.js';
 import { extractBody, getFeaturedAsset } from '../../logic/resolve.js';
 
 interface Props {
-  entry: MarvinEntry;
+  entry: RendererEntry;
   config?: Record<string, unknown>;
   class?: string;
 }
