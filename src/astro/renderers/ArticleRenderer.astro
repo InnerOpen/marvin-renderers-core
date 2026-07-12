@@ -1,0 +1,49 @@
+---
+import type { MarvinEntry } from '@inneropen/marvin-sdk';
+import { extractBody, getFeaturedAsset } from '../../logic/resolve.js';
+
+interface Props {
+  entry: MarvinEntry;
+  config?: Record<string, unknown>;
+  class?: string;
+}
+
+const { entry, config, class: className } = Astro.props;
+
+const body = extractBody(entry);
+const featuredAsset = getFeaturedAsset(entry);
+const typeSlug = entry.entryTypeInfo?.slug ?? 'article';
+---
+
+<article
+  data-renderer="article"
+  data-entry-type={typeSlug}
+  class={className}
+>
+  {featuredAsset?.publicUrl && (
+    <figure data-role="featured-asset">
+      <img
+        src={featuredAsset.publicUrl}
+        alt={featuredAsset.altText ?? entry.title}
+        width={featuredAsset.width}
+        height={featuredAsset.height}
+      />
+    </figure>
+  )}
+
+  <header data-role="header">
+    <h1 data-role="title">{entry.title}</h1>
+    {entry.summary && <p data-role="summary">{entry.summary}</p>}
+    {entry.publishedAt && (
+      <time data-role="published-at" datetime={entry.publishedAt}>
+        {new Date(entry.publishedAt).toLocaleDateString()}
+      </time>
+    )}
+  </header>
+
+  {body && (
+    <div data-role="body" set:html={body} />
+  )}
+
+  <slot />
+</article>

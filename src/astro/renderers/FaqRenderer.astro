@@ -1,0 +1,29 @@
+---
+import type { MarvinEntry } from '@inneropen/marvin-sdk';
+import { extractField } from '../../logic/resolve.js';
+
+interface Props {
+  entry: MarvinEntry;
+  config?: Record<string, unknown>;
+  class?: string;
+}
+
+const { entry, config, class: className } = Astro.props;
+
+const question = extractField<string>(entry, 'question') ?? entry.title;
+const answer = extractField<string>(entry, 'answer');
+const typeSlug = entry.entryTypeInfo?.slug ?? 'faq';
+---
+
+<dl
+  data-renderer="faq"
+  data-entry-type={typeSlug}
+  class={className}
+>
+  <dt data-role="question">{question}</dt>
+  {answer && (
+    <dd data-role="answer" set:html={answer} />
+  )}
+
+  <slot />
+</dl>

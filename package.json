@@ -1,0 +1,45 @@
+{
+  "name": "@inneropen/marvin-renderers-core",
+  "version": "0.1.0",
+  "description": "Core renderer components for Marvin CMS — semantic Astro components for system entry types",
+  "type": "module",
+  "exports": {
+    "./logic": {
+      "types": "./dist/logic/index.d.ts",
+      "import": "./dist/logic/index.js"
+    },
+    "./astro": "./src/astro/index.ts",
+    "./astro/registry": "./src/astro/registry.ts",
+    "./astro/renderers/*": "./src/astro/renderers/*"
+  },
+  "files": [
+    "dist",
+    "src/astro"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "peerDependencies": {
+    "astro": "^4.0.0 || ^5.0.0",
+    "@inneropen/marvin-sdk": "^2.0.0"
+  },
+  "peerDependenciesMeta": {
+    "astro": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@inneropen/marvin-sdk": "^2.0.0",
+    "astro": "^5.0.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.5.0",
+    "vitest": "^3.0.0"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/inneropen/marvin-renderers-core.git"
+  }
+}
