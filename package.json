@@ -1,6 +1,6 @@
 {
   "name": "@inneropen/marvin-renderers-core",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Core renderer components for Marvin CMS — semantic Astro components for system entry types",
   "type": "module",
   "exports": {
