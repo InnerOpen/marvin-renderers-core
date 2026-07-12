@@ -1,3 +1,10 @@
+# [1.1.0-next.2](https://github.com/inneropen/marvin-renderers-core/compare/v1.1.0-next.1...v1.1.0-next.2) (2026-07-12)
+
+
+### Features
+
+* Filter renderer validation on isRendered flag, rename variable ([635310c](https://github.com/inneropen/marvin-renderers-core/commit/635310c7c557e9168dcff44164bba57a42b14cd7))
+
 # [1.1.0-next.1](https://github.com/inneropen/marvin-renderers-core/compare/v1.0.1...v1.1.0-next.1) (2026-07-12)
 
 
