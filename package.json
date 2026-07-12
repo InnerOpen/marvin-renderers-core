@@ -15,7 +15,8 @@
   },
   "files": [
     "dist",
-    "src/astro"
+    "src/astro",
+    "src/logic"
   ],
   "scripts": {
     "build": "tsup",
@@ -24,7 +25,7 @@
   },
   "peerDependencies": {
     "@inneropen/marvin-sdk": "^2.0.0",
-    "astro": "^4.0.0 || ^5.0.0"
+    "astro": "^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0"
   },
   "peerDependenciesMeta": {
     "astro": {
