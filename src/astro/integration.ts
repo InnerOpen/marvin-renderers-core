@@ -1,4 +1,5 @@
 import type { AstroIntegration } from 'astro';
+import { createMarvinClient } from '@inneropen/marvin-sdk';
 import type { RendererRegistry } from '../logic/types';
 import type { RendererCheckOptions } from '../logic/validation-types';
 import { validateRenderers } from '../logic/validation';
@@ -23,19 +24,8 @@ export function marvinIntegration(options: RendererCheckOptions): AstroIntegrati
 
         let workspaceRenderers;
         try {
-          const url = `${apiUrl.replace(/\/$/, '')}/api/publish/${workspaceSlug}/entry-types`;
-          const response = await fetch(url, {
-            headers: { Authorization: `Bearer ${siteToken}` },
-          });
-
-          if (!response.ok) {
-            logger.warn(
-              `Renderer validation failed — API returned ${response.status}`
-            );
-            return;
-          }
-
-          workspaceRenderers = await response.json();
+          const client = createMarvinClient({ apiUrl, siteClientToken: siteToken, workspaceSlug });
+          workspaceRenderers = await client.renderers.list();
         } catch (error) {
           logger.warn(
             `Renderer validation failed — could not reach Marvin API: ${error instanceof Error ? error.message : error}`
