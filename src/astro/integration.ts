@@ -21,7 +21,7 @@ export function marvinIntegration(options: RendererCheckOptions): AstroIntegrati
           return;
         }
 
-        let entryTypes;
+        let workspaceRenderers;
         try {
           const url = `${apiUrl.replace(/\/$/, '')}/api/publish/${workspaceSlug}/entry-types`;
           const response = await fetch(url, {
@@ -35,7 +35,7 @@ export function marvinIntegration(options: RendererCheckOptions): AstroIntegrati
             return;
           }
 
-          entryTypes = await response.json();
+          workspaceRenderers = await response.json();
         } catch (error) {
           logger.warn(
             `Renderer validation failed — could not reach Marvin API: ${error instanceof Error ? error.message : error}`
@@ -43,7 +43,7 @@ export function marvinIntegration(options: RendererCheckOptions): AstroIntegrati
           return;
         }
 
-        const result = validateRenderers(entryTypes, registry, { ignore });
+        const result = validateRenderers(workspaceRenderers, registry, { ignore });
 
         if (result.missing.length === 0) {
           logger.info(

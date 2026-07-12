@@ -4,6 +4,7 @@ import type { MissingRenderer, ValidationResult } from './validation-types';
 interface EntryTypeWithRendering {
   slug: string;
   name: string;
+  isRendered?: boolean;
   rendering?: {
     renderer?: string;
     package?: string;
@@ -27,7 +28,7 @@ export function validateRenderers(
   const ignore = new Set(options?.ignore ?? []);
 
   const withRenderer = entryTypes.filter(
-    (et) => et.rendering?.renderer && !ignore.has(et.slug)
+    (et) => et.isRendered && et.rendering?.renderer && !ignore.has(et.slug)
   );
 
   const hasRenderer = isRendererRegistry(registry)
