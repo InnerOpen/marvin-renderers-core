@@ -1,3 +1,10 @@
+# [1.1.0-next.3](https://github.com/inneropen/marvin-renderers-core/compare/v1.1.0-next.2...v1.1.0-next.3) (2026-07-12)
+
+
+### Features
+
+* Use SDK client instead of raw fetch for renderer validation ([1a93713](https://github.com/inneropen/marvin-renderers-core/commit/1a93713b03b781fe8ea3226884871964a5877269))
+
 # [1.1.0-next.2](https://github.com/inneropen/marvin-renderers-core/compare/v1.1.0-next.1...v1.1.0-next.2) (2026-07-12)
 
 
