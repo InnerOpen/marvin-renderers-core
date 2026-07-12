@@ -10,6 +10,7 @@
     },
     "./astro": "./src/astro/index.ts",
     "./astro/registry": "./src/astro/registry.ts",
+    "./astro/integration": "./src/astro/integration.ts",
     "./astro/renderers/*": "./src/astro/renderers/*"
   },
   "files": [
@@ -22,8 +23,8 @@
     "test": "vitest run"
   },
   "peerDependencies": {
-    "astro": "^4.0.0 || ^5.0.0",
-    "@inneropen/marvin-sdk": "^2.0.0"
+    "@inneropen/marvin-sdk": "^2.0.0",
+    "astro": "^4.0.0 || ^5.0.0"
   },
   "peerDependenciesMeta": {
     "astro": {
@@ -32,9 +33,10 @@
   },
   "devDependencies": {
     "@inneropen/marvin-sdk": "^2.0.0",
-    "astro": "^5.0.0",
     "@semantic-release/changelog": "^6.0.0",
     "@semantic-release/git": "^10.0.0",
+    "@types/node": "^26.1.1",
+    "astro": "^5.0.0",
     "semantic-release": "^24.0.0",
     "tsup": "^8.0.0",
     "typescript": "^5.5.0",

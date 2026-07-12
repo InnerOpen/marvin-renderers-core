@@ -16,3 +16,11 @@ export {
 } from './resolve.js';
 
 export { createRegistry } from './registry.js';
+
+export type {
+  MissingRenderer,
+  RendererCheckOptions,
+  ValidationResult,
+} from './validation-types.js';
+
+export { validateRenderers } from './validation.js';
