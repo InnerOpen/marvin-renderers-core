@@ -1,3 +1,11 @@
+# [1.1.0-next.5](https://github.com/inneropen/marvin-renderers-core/compare/v1.1.0-next.4...v1.1.0-next.5) (2026-07-14)
+
+
+### Bug Fixes
+
+* Add isRendered flag to validation test helper ([357d35c](https://github.com/inneropen/marvin-renderers-core/commit/357d35cf04c827b32c2966f4fca7e07913efa45a))
+* Cast through unknown for MarvinAsset type assertions ([1dd91d3](https://github.com/inneropen/marvin-renderers-core/commit/1dd91d3288cbc028881f58b2bcb328657657fa4b))
+
 # [1.1.0-next.4](https://github.com/inneropen/marvin-renderers-core/compare/v1.1.0-next.3...v1.1.0-next.4) (2026-07-12)
 
 
