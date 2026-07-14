@@ -1,10 +1,13 @@
 import type { MarvinAsset } from '@inneropen/marvin-sdk';
 import type { RendererEntry } from './types.js';
+import { debug } from './debug.js';
 
 const DEFAULT_RENDERER = 'page';
 
 export function resolveRendererName(entry: RendererEntry): string {
-  return entry.entryTypeInfo?.renderer ?? DEFAULT_RENDERER;
+  const name = entry.entryTypeInfo?.renderer ?? DEFAULT_RENDERER;
+  debug('resolveRendererName', { slug: entry.slug, renderer: name });
+  return name;
 }
 
 export function resolveRendererConfig(
@@ -12,8 +15,9 @@ export function resolveRendererConfig(
   overrides?: Record<string, unknown>,
 ): Record<string, unknown> {
   const base = entry.entryTypeInfo?.config ?? {};
-  if (!overrides) return base;
-  return { ...base, ...overrides };
+  const merged = overrides ? { ...base, ...overrides } : base;
+  debug('resolveRendererConfig', { slug: entry.slug, config: merged });
+  return merged;
 }
 
 export function extractBody(entry: RendererEntry): string | undefined {
@@ -34,7 +38,10 @@ export function getFeaturedAsset(
   entry: RendererEntry,
 ): MarvinAsset | undefined {
   const featuredAsset = normalizeEntryAsset(entry.featuredAsset);
-  if (featuredAsset?.publicUrl) return featuredAsset as unknown as MarvinAsset;
+  if (featuredAsset?.publicUrl) {
+    debug('getFeaturedAsset', { slug: entry.slug, source: 'featuredAsset', url: featuredAsset.publicUrl });
+    return featuredAsset as unknown as MarvinAsset;
+  }
 
   const assets = entry.assets;
   if (!assets?.length) return undefined;
@@ -46,7 +53,9 @@ export function getFeaturedAsset(
       return role === 'featured' || role === 'hero';
     },
   );
-  return normalizeEntryAsset(featured ?? assets[0]) as unknown as MarvinAsset | undefined;
+  const result = normalizeEntryAsset(featured ?? assets[0]) as unknown as MarvinAsset | undefined;
+  debug('getFeaturedAsset', { slug: entry.slug, source: featured ? 'role-match' : 'first-asset', url: result?.publicUrl });
+  return result;
 }
 
 export function isRoutable(entry: RendererEntry): boolean {

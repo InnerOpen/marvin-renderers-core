@@ -31,3 +31,5 @@ export type {
 } from './validation-types.js';
 
 export { validateRenderers } from './validation.js';
+
+export { debug } from './debug.js';

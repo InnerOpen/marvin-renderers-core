@@ -3,6 +3,7 @@ import type { Entry } from '@inneropen/marvin-sdk';
 import type { RendererEntry } from '../logic/types.js';
 import { resolveRendererConfig, resolveRendererName } from '../logic/resolve.js';
 import { getRenderer } from './registry.js';
+import { debug } from '../logic/debug.js';
 
 const CORE_RENDERER_PACKAGE = '@inneropen/marvin-renderers-core';
 
@@ -23,6 +24,7 @@ const Renderer = rendererPackage === CORE_RENDERER_PACKAGE && rendererName
   ? getRenderer(rendererName)
   : undefined;
 const config = rendererEntry ? resolveRendererConfig(rendererEntry, configOverrides) : {};
+debug('EntryRenderer', { slug: rendererEntry?.slug, renderer: rendererName, package: rendererPackage, hasComponent: !!Renderer });
 ---
 
 {rendererEntry && Renderer ? (
