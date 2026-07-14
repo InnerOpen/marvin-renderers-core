@@ -2,21 +2,20 @@ import type { MarvinEntry } from '@inneropen/marvin-sdk';
 
 export interface EntryTypeInfo {
   slug: string;
-  renderer?: string;
-  package?: string;
-  version?: string;
-  config?: Record<string, unknown>;
-  publishable?: boolean;
-  submittable?: boolean;
-  routable?: boolean;
+  renderer?: string | null;
+  package?: string | null;
+  version?: string | null;
+  config?: Record<string, unknown> | null;
+  publishable: boolean;
+  submittable: boolean;
+  routable: boolean;
 }
 
 export interface RendererEntry extends MarvinEntry {
-  data?: Record<string, unknown>;
   dataJson?: Record<string, unknown>;
   contentMarkdown?: string;
   featuredAsset?: unknown;
-  entryTypeInfo?: EntryTypeInfo;
+  entryTypeInfo?: EntryTypeInfo | null;
 }
 
 export type CoreRendererName = 'page' | 'article' | 'faq' | 'navigation';

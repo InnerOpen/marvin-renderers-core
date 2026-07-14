@@ -5,11 +5,7 @@ interface EntryTypeWithRendering {
   slug: string;
   name: string;
   isRendered?: boolean;
-  rendering?: {
-    renderer?: string;
-    package?: string;
-    version?: string;
-  };
+  rendering?: Record<string, unknown> | null;
 }
 
 function isRendererRegistry(value: unknown): value is RendererRegistry {
@@ -32,21 +28,21 @@ export function validateRenderers(
   );
 
   const hasRenderer = isRendererRegistry(registry)
-    ? (name: string, packageName?: string) => registry.has(name, packageName)
+    ? (name: string) => registry.has(name)
     : (name: string) => name in registry;
 
   const missing: MissingRenderer[] = [];
 
   for (const et of withRenderer) {
-    const renderer = et.rendering!.renderer!;
-    const packageName = et.rendering!.package;
-    if (!hasRenderer(renderer, packageName)) {
+    const rendering = et.rendering!;
+    const renderer = rendering.renderer as string;
+    if (!hasRenderer(renderer)) {
       missing.push({
         entryTypeSlug: et.slug,
         entryTypeName: et.name,
         renderer,
-        package: et.rendering!.package,
-        version: et.rendering!.version,
+        package: (rendering.package as string) ?? undefined,
+        version: (rendering.version as string) ?? undefined,
       });
     }
   }
