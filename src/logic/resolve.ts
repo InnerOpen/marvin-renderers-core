@@ -34,19 +34,19 @@ export function getFeaturedAsset(
   entry: RendererEntry,
 ): MarvinAsset | undefined {
   const featuredAsset = normalizeEntryAsset(entry.featuredAsset);
-  if (featuredAsset?.publicUrl) return featuredAsset as MarvinAsset;
+  if (featuredAsset?.publicUrl) return featuredAsset as unknown as MarvinAsset;
 
   const assets = entry.assets;
   if (!assets?.length) return undefined;
 
   const featured = assets.find(
     (a) => {
-      const value = a as Record<string, unknown>;
+      const value = a as unknown as Record<string, unknown>;
       const role = value.role ?? (value.metadata as Record<string, unknown> | undefined)?.role;
       return role === 'featured' || role === 'hero';
     },
   );
-  return normalizeEntryAsset(featured ?? assets[0]) as MarvinAsset | undefined;
+  return normalizeEntryAsset(featured ?? assets[0]) as unknown as MarvinAsset | undefined;
 }
 
 export function isRoutable(entry: RendererEntry): boolean {
