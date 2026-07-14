@@ -6,6 +6,10 @@ import type {
   RendererRegistry,
 } from './types.js';
 
+function isRendererRegistry<T>(value: RendererRegistry<T> | Record<string, T> | undefined): value is RendererRegistry<T> {
+  return Boolean(value) && typeof value === 'object' && 'get' in value && typeof value.get === 'function';
+}
+
 export function resolveRenderer<T>(
   name: string,
   customRegistry?: RendererRegistry<T> | Record<string, T>,
@@ -13,7 +17,7 @@ export function resolveRenderer<T>(
 ): T | undefined {
   const getValue = (registry: RendererRegistry<T> | Record<string, T> | undefined) => {
     if (!registry) return undefined;
-    if ('get' in registry && typeof registry.get === 'function') {
+    if (isRendererRegistry(registry)) {
       return registry.get(name);
     }
     return registry[name];
