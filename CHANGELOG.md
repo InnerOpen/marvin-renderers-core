@@ -1,3 +1,10 @@
+# [1.1.0-next.8](https://github.com/inneropen/marvin-renderers-core/compare/v1.1.0-next.7...v1.1.0-next.8) (2026-07-14)
+
+
+### Bug Fixes
+
+* Update debug prefix to [Marvin Renderers Core] ([46a6be8](https://github.com/inneropen/marvin-renderers-core/commit/46a6be804752fd77bb983d988c17f18930b4669c))
+
 # [1.1.0-next.7](https://github.com/inneropen/marvin-renderers-core/compare/v1.1.0-next.6...v1.1.0-next.7) (2026-07-14)
 
 
