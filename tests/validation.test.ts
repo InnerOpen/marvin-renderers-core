@@ -11,6 +11,7 @@ const makeEntryType = (
 ) => ({
   slug,
   name,
+  isRendered: !!renderer,
   rendering: renderer ? { renderer, package: pkg, version } : undefined,
 });
 
