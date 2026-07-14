@@ -1,5 +1,7 @@
+import type { RendererRegistry } from './types';
+
 export interface RendererCheckOptions {
-  registry: import('./types').RendererRegistry | Record<string, unknown>;
+  registry: RendererRegistry | Record<string, unknown>;
   apiUrl?: string;
   siteToken?: string;
   strict?: boolean;

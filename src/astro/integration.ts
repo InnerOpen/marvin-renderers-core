@@ -1,8 +1,7 @@
 import type { AstroIntegration } from 'astro';
 import { createMarvinClient } from '@inneropen/marvin-sdk';
-import { validateRenderers } from '../../dist/logic/index.js';
-import type { RendererRegistry } from '../../dist/logic/index.js';
-import type { RendererCheckOptions } from '../../dist/logic/index.js';
+import { validateRenderers } from '../logic/validation.js';
+import type { RendererCheckOptions } from '../logic/validation-types.js';
 
 export function marvinIntegration(options: RendererCheckOptions): AstroIntegration {
   const { registry, strict = false, ignore } = options;

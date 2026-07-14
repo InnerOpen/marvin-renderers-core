@@ -12,6 +12,7 @@ export interface EntryTypeInfo {
 }
 
 export interface RendererEntry extends MarvinEntry {
+  data?: Record<string, unknown> | null;
   dataJson?: Record<string, unknown>;
   contentMarkdown?: string;
   featuredAsset?: unknown;
@@ -26,10 +27,27 @@ export interface RendererProps {
   class?: string;
 }
 
+export interface RendererRequirement {
+  key: string;
+  packageName?: string;
+  versionRange?: string;
+  config: Record<string, unknown>;
+}
+
+export interface RendererDefinition<T = unknown> {
+  key: string;
+  component: T;
+  defaultConfig?: Record<string, unknown>;
+  description?: string;
+}
+
 export interface RendererRegistry<T = unknown> {
   get(name: string, packageName?: string | null): T | undefined;
   has(name: string, packageName?: string | null): boolean;
   names(): string[];
+  use?(packageDefinition: RendererPackage<T>): RendererRegistry<T>;
+  register?(definition: RendererDefinition<T>): RendererRegistry<T>;
+  override?(overrides: Record<string, T>): RendererRegistry<T>;
 }
 
 export interface RendererPackage<T = unknown> {

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { createRegistry } from '../src/logic/registry.js';
+import { createRegistry, resolveRenderer } from '../src/logic/registry.js';
 
 describe('createRegistry', () => {
   const registry = createRegistry({
@@ -31,5 +31,13 @@ describe('createRegistry', () => {
     expect(empty.names()).toEqual([]);
     expect(empty.has('anything')).toBe(false);
     expect(empty.get('anything')).toBeUndefined();
+  });
+
+  it('uses a custom registry first and falls back to the core registry', () => {
+    const customRegistry = createRegistry({ faq: 'CustomFaqComponent' });
+    const coreRegistry = createRegistry({ article: 'ArticleComponent' });
+
+    expect(resolveRenderer('faq', customRegistry, coreRegistry)).toBe('CustomFaqComponent');
+    expect(resolveRenderer('article', customRegistry, coreRegistry)).toBe('ArticleComponent');
   });
 });

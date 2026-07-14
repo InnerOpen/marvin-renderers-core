@@ -1,8 +1,9 @@
 ---
 import type { Entry } from '@inneropen/marvin-sdk';
-import type { RendererEntry } from '../logic/types.js';
-import { resolveRendererConfig, resolveRendererName } from '../logic/resolve.js';
+import type { RendererEntry, RendererRegistry } from '../logic/types.js';
+import { resolveRendererConfig, resolveRendererName, resolveRendererRequirement, shouldRenderEntry } from '../logic/resolve.js';
 import { getRenderer } from './registry.js';
+import { resolveRenderer } from '../logic/registry.js';
 import { debug } from '../logic/debug.js';
 
 const CORE_RENDERER_PACKAGE = '@inneropen/marvin-renderers-core';
@@ -11,23 +12,26 @@ interface Props {
   entry?: RendererEntry | Entry;
   config?: Record<string, unknown>;
   class?: string;
+  registry?: RendererRegistry | Record<string, unknown>;
 }
 
-const { entry, config: configOverrides, class: className } = Astro.props;
+const { entry, config: configOverrides, class: className, registry: customRegistry } = Astro.props;
 const rendererEntry = typeof (entry as any)?.toJSON === 'function'
   ? (entry as Entry).toJSON() as RendererEntry
   : entry as RendererEntry | undefined;
 
-const rendererPackage = rendererEntry?.entryTypeInfo?.package;
+const rendererRequirement = rendererEntry ? resolveRendererRequirement(rendererEntry) : undefined;
+const rendererPackage = rendererRequirement?.packageName;
 const rendererName = rendererEntry ? resolveRendererName(rendererEntry) : undefined;
 const Renderer = rendererPackage === CORE_RENDERER_PACKAGE && rendererName
-  ? getRenderer(rendererName)
+  ? resolveRenderer(rendererName, customRegistry, getRenderer(rendererName))
   : undefined;
+const canRender = rendererEntry ? shouldRenderEntry(rendererEntry, rendererName) : true;
 const config = rendererEntry ? resolveRendererConfig(rendererEntry, configOverrides) : {};
-debug('EntryRenderer', { slug: rendererEntry?.slug, renderer: rendererName, package: rendererPackage, hasComponent: !!Renderer });
+debug('EntryRenderer', { slug: rendererEntry?.slug, renderer: rendererName, package: rendererPackage, hasComponent: !!Renderer, canRender });
 ---
 
-{rendererEntry && Renderer ? (
+{rendererEntry && Renderer && canRender ? (
   <Renderer entry={rendererEntry} config={config} class={className}>
     <slot />
   </Renderer>

@@ -1,6 +1,5 @@
 ---
 import type { RendererEntry } from '../../logic/types.js';
-import { extractField } from '../../logic/resolve.js';
 
 interface Props {
   entry: RendererEntry;
@@ -10,20 +9,18 @@ interface Props {
 
 const { entry, config, class: className } = Astro.props;
 
-const question = extractField<string>(entry, 'question') ?? entry.title;
-const answer = extractField<string>(entry, 'answer');
 const typeSlug = entry.entryTypeInfo?.slug ?? 'faq';
 ---
 
-<dl
+<section
   data-renderer="faq"
   data-entry-type={typeSlug}
   class={className}
 >
-  <dt data-role="question">{question}</dt>
-  {answer && (
-    <dd data-role="answer" set:html={answer} />
+  <h2 data-role="title">{entry.title}</h2>
+  {entry.summary && (
+    <p data-role="summary">{entry.summary}</p>
   )}
 
   <slot />
-</dl>
+</section>

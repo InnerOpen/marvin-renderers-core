@@ -2,11 +2,13 @@ import { describe, it, expect } from 'vitest';
 import type { RendererEntry } from '../src/logic/types.js';
 import {
   resolveRendererName,
+  resolveRendererRequirement,
   resolveRendererConfig,
   extractBody,
   extractField,
   getFeaturedAsset,
   isRoutable,
+  shouldRenderEntry,
 } from '../src/logic/resolve.js';
 
 function makeEntry(overrides: Partial<RendererEntry> = {}): RendererEntry {
@@ -39,6 +41,21 @@ describe('resolveRendererName', () => {
       entryTypeInfo: { slug: 'custom' },
     });
     expect(resolveRendererName(entry)).toBe('page');
+  });
+});
+
+describe('resolveRendererRequirement', () => {
+  it('returns the renderer requirement from entryTypeInfo', () => {
+    const entry = makeEntry({
+      entryTypeInfo: { slug: 'faq', renderer: 'faq', package: '@inneropen/marvin-renderers-core', version: '^1.0.0', config: { layout: 'stacked' } },
+    });
+
+    expect(resolveRendererRequirement(entry)).toEqual({
+      key: 'faq',
+      packageName: '@inneropen/marvin-renderers-core',
+      versionRange: '^1.0.0',
+      config: { layout: 'stacked' },
+    });
   });
 });
 
@@ -171,5 +188,21 @@ describe('isRoutable', () => {
       entryTypeInfo: { slug: 'nav', routable: false },
     });
     expect(isRoutable(entry)).toBe(false);
+  });
+});
+
+describe('shouldRenderEntry', () => {
+  it('returns false when the renderer-specific flag is false', () => {
+    const entry = makeEntry({ dataJson: { faq: false } });
+    expect(shouldRenderEntry(entry, 'faq')).toBe(false);
+  });
+
+  it('returns false when a generic enabled flag is false', () => {
+    const entry = makeEntry({ dataJson: { enabled: false } });
+    expect(shouldRenderEntry(entry, 'faq')).toBe(false);
+  });
+
+  it('returns true by default when no visibility flag is present', () => {
+    expect(shouldRenderEntry(makeEntry(), 'faq')).toBe(true);
   });
 });

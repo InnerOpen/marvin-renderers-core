@@ -11,17 +11,20 @@ export type {
 
 export {
   resolveRendererName,
+  resolveRendererRequirement,
   resolveRendererConfig,
   extractBody,
   extractField,
   getFeaturedAsset,
   isRoutable,
+  shouldRenderEntry,
 } from './resolve.js';
 
 export {
   createPackageRegistry,
   createRegistry,
   createRendererPackage,
+  resolveRenderer,
 } from './registry.js';
 
 export type {

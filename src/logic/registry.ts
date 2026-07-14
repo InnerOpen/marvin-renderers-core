@@ -1,24 +1,69 @@
 import type {
+  RendererDefinition,
   RendererPackage,
   RendererPackageOptions,
   RendererPackageRegistry,
   RendererRegistry,
 } from './types.js';
 
+export function resolveRenderer<T>(
+  name: string,
+  customRegistry?: RendererRegistry<T> | Record<string, T>,
+  fallbackRegistry?: RendererRegistry<T> | Record<string, T>,
+): T | undefined {
+  const getValue = (registry: RendererRegistry<T> | Record<string, T> | undefined) => {
+    if (!registry) return undefined;
+    if ('get' in registry && typeof registry.get === 'function') {
+      return registry.get(name);
+    }
+    return registry[name];
+  };
+
+  return getValue(customRegistry) ?? getValue(fallbackRegistry);
+}
+
 export function createRegistry<T>(
   map: Record<string, T>,
 ): RendererRegistry<T> {
-  return {
+  const registryMap = { ...map };
+
+  const instance: RendererRegistry<T> = {
     get(name: string): T | undefined {
-      return map[name];
+      return registryMap[name];
     },
     has(name: string): boolean {
-      return name in map;
+      return name in registryMap;
     },
     names(): string[] {
-      return Object.keys(map);
+      return Object.keys(registryMap);
+    },
+    use(packageDefinition: RendererPackage<T>): RendererRegistry<T> {
+      for (const [name, value] of Object.entries(packageDefinition.registry.names().reduce<Record<string, T>>((acc, item) => {
+        acc[item] = packageDefinition.registry.get(item)!;
+        return acc;
+      }, {}))) {
+        if (!registryMap[name]) {
+          registryMap[name] = value;
+        }
+      }
+      return instance;
+    },
+    register(definition: RendererDefinition<T>): RendererRegistry<T> {
+      if (registryMap[definition.key]) {
+        throw new Error(`Duplicate renderer registration for "${definition.key}"`);
+      }
+      registryMap[definition.key] = definition.component;
+      return instance;
+    },
+    override(overrides: Record<string, T>): RendererRegistry<T> {
+      for (const [name, value] of Object.entries(overrides)) {
+        registryMap[name] = value;
+      }
+      return instance;
     },
   };
+
+  return instance;
 }
 
 export function createRendererPackage<T>(
