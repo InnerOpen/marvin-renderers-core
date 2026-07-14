@@ -1,0 +1,12 @@
+{
+  "name": "@inneropen/marvin-renderers-example",
+  "version": "0.1.0",
+  "type": "module",
+  "exports": {
+    "./astro": "./src/astro/index.ts"
+  },
+  "peerDependencies": {
+    "@inneropen/marvin-renderers-core": "^1.0.0",
+    "astro": "^4.0.0 || ^5.0.0"
+  }
+}

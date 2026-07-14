@@ -32,14 +32,15 @@ export function validateRenderers(
   );
 
   const hasRenderer = isRendererRegistry(registry)
-    ? (name: string) => registry.has(name)
+    ? (name: string, packageName?: string) => registry.has(name, packageName)
     : (name: string) => name in registry;
 
   const missing: MissingRenderer[] = [];
 
   for (const et of withRenderer) {
     const renderer = et.rendering!.renderer!;
-    if (!hasRenderer(renderer)) {
+    const packageName = et.rendering!.package;
+    if (!hasRenderer(renderer, packageName)) {
       missing.push({
         entryTypeSlug: et.slug,
         entryTypeName: et.name,

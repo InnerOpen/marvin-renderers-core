@@ -2,6 +2,9 @@ export type {
   CoreRendererName,
   EntryTypeInfo,
   RendererEntry,
+  RendererPackage,
+  RendererPackageOptions,
+  RendererPackageRegistry,
   RendererProps,
   RendererRegistry,
 } from './types.js';
@@ -15,7 +18,11 @@ export {
   isRoutable,
 } from './resolve.js';
 
-export { createRegistry } from './registry.js';
+export {
+  createPackageRegistry,
+  createRegistry,
+  createRendererPackage,
+} from './registry.js';
 
 export type {
   MissingRenderer,

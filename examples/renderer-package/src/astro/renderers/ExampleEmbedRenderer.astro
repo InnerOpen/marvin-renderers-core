@@ -1,0 +1,47 @@
+---
+import type { RendererEntry } from '@inneropen/marvin-renderers-core/logic';
+import { extractField } from '@inneropen/marvin-renderers-core/logic';
+
+interface Props {
+  entry: RendererEntry;
+  config?: Record<string, unknown>;
+  class?: string;
+}
+
+const { entry, config = {}, class: className } = Astro.props;
+
+const provider = extractField<string>(entry, 'provider') ?? 'example';
+const embedId = extractField<string>(entry, 'embedId');
+const title = extractField<string>(entry, 'title') ?? entry.title;
+const allowFullscreen = config.allowFullscreen !== false;
+
+const embedSrc = embedId
+  ? `https://example.com/embed/${encodeURIComponent(embedId)}`
+  : undefined;
+---
+
+<article
+  data-renderer="example-embed"
+  data-entry-type={entry.entryTypeInfo?.slug}
+  data-provider={provider}
+  class={className}
+>
+  <header data-role="header">
+    <h2 data-role="title">{title}</h2>
+    {entry.summary && <p data-role="summary">{entry.summary}</p>}
+  </header>
+
+  {embedSrc && (
+    <iframe
+      data-role="embed"
+      src={embedSrc}
+      title={title}
+      loading="lazy"
+      referrerpolicy="strict-origin-when-cross-origin"
+      allow={allowFullscreen ? 'fullscreen' : undefined}
+      allowfullscreen={allowFullscreen}
+    />
+  )}
+
+  <slot />
+</article>

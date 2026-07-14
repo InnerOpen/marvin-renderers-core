@@ -2,8 +2,9 @@ import PageRenderer from './renderers/PageRenderer.astro';
 import ArticleRenderer from './renderers/ArticleRenderer.astro';
 import FaqRenderer from './renderers/FaqRenderer.astro';
 import NavigationRenderer from './renderers/NavigationRenderer.astro';
-import { createRegistry } from '../logic/registry.js';
+import { createRendererPackage, createRegistry } from '../logic/registry.js';
 import type { CoreRendererName } from '../logic/types.js';
+import packageJson from '../../package.json';
 
 export { PageRenderer, ArticleRenderer, FaqRenderer, NavigationRenderer };
 
@@ -15,6 +16,12 @@ const rendererMap: Record<CoreRendererName, typeof PageRenderer> = {
 };
 
 export const astroRegistry = createRegistry(rendererMap);
+
+export const coreRendererPackage = createRendererPackage({
+  packageName: packageJson.name,
+  version: packageJson.version,
+  renderers: rendererMap,
+});
 
 export function getRenderer(name: string) {
   return astroRegistry.get(name);

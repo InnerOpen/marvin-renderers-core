@@ -1,0 +1,34 @@
+---
+import type { Entry } from '@inneropen/marvin-sdk';
+import type { RendererEntry } from '../logic/types.js';
+import { resolveRendererConfig, resolveRendererName } from '../logic/resolve.js';
+import { getRenderer } from './registry.js';
+
+const CORE_RENDERER_PACKAGE = '@inneropen/marvin-renderers-core';
+
+interface Props {
+  entry?: RendererEntry | Entry;
+  config?: Record<string, unknown>;
+  class?: string;
+}
+
+const { entry, config: configOverrides, class: className } = Astro.props;
+const rendererEntry = typeof (entry as any)?.toJSON === 'function'
+  ? (entry as Entry).toJSON() as RendererEntry
+  : entry as RendererEntry | undefined;
+
+const rendererPackage = rendererEntry?.entryTypeInfo?.package;
+const rendererName = rendererEntry ? resolveRendererName(rendererEntry) : undefined;
+const Renderer = rendererPackage === CORE_RENDERER_PACKAGE && rendererName
+  ? getRenderer(rendererName)
+  : undefined;
+const config = rendererEntry ? resolveRendererConfig(rendererEntry, configOverrides) : {};
+---
+
+{rendererEntry && Renderer ? (
+  <Renderer entry={rendererEntry} config={config} class={className}>
+    <slot />
+  </Renderer>
+) : (
+  <slot />
+)}

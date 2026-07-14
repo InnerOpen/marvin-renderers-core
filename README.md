@@ -86,9 +86,103 @@ import {
   extractField,
   getFeaturedAsset,
   isRoutable,
+  createPackageRegistry,
   createRegistry,
+  createRendererPackage,
 } from '@inneropen/marvin-renderers-core/logic';
 ```
+
+## Creating Renderer Packages
+
+Renderer packages should be thin domain packages. Core owns the registry contract, validation, and shared entry helpers. A package such as `@inneropen/marvin-renderers-youtube` or `@inneropen/marvin-renderers-shopify` should only export its domain components and a renderer package definition.
+
+The package declares its own name and installed version from `package.json`:
+
+```ts
+// src/astro/index.ts
+import { createRendererPackage } from '@inneropen/marvin-renderers-core/logic';
+import packageJson from '../../package.json';
+import YouTubeVideoRenderer from './renderers/YouTubeVideoRenderer.astro';
+
+export const youtubeRendererPackage = createRendererPackage({
+  packageName: packageJson.name,
+  version: packageJson.version,
+  renderers: {
+    'youtube-video': YouTubeVideoRenderer,
+  },
+});
+```
+
+Renderer components receive the same props as core renderers:
+
+```astro
+---
+import type { RendererEntry } from '@inneropen/marvin-renderers-core/logic';
+import { extractField } from '@inneropen/marvin-renderers-core/logic';
+
+interface Props {
+  entry: RendererEntry;
+  config?: Record<string, unknown>;
+  class?: string;
+}
+
+const { entry, config = {}, class: className } = Astro.props;
+const videoId = extractField<string>(entry, 'videoId');
+const title = extractField<string>(entry, 'title') ?? entry.title;
+---
+
+<article data-renderer="youtube-video" class={className}>
+  {videoId && (
+    <iframe
+      src={`https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoId)}`}
+      title={title}
+      loading="lazy"
+      referrerpolicy="strict-origin-when-cross-origin"
+      allowfullscreen
+    />
+  )}
+</article>
+```
+
+Sites explicitly opt into renderer packages:
+
+```ts
+// astro.config.mjs
+import { coreRendererPackage } from '@inneropen/marvin-renderers-core/astro';
+import { createPackageRegistry } from '@inneropen/marvin-renderers-core/logic';
+import { youtubeRendererPackage } from '@inneropen/marvin-renderers-youtube/astro';
+
+const renderers = createPackageRegistry([
+  coreRendererPackage,
+  youtubeRendererPackage,
+]);
+
+export default defineConfig({
+  integrations: [
+    marvinIntegration({ registry: renderers }),
+  ],
+});
+```
+
+Marvin entry types can then request:
+
+```json
+{
+  "isRendered": true,
+  "rendering": {
+    "renderer": "youtube-video",
+    "package": "@inneropen/marvin-renderers-youtube",
+    "version": "^1.0.0",
+    "config": {
+      "privacyEnhanced": true
+    }
+  }
+}
+```
+
+The package string is not used to dynamically import code. It is used to verify that the site has explicitly installed and registered a matching renderer package.
+
+See `examples/renderer-package` for a minimal package skeleton, including SDK examples for fetching entries and rendering them with core `EntryRenderer`.
 
 ## Components
 
