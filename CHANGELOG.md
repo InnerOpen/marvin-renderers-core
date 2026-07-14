@@ -1,3 +1,10 @@
+# [1.1.0-next.7](https://github.com/inneropen/marvin-renderers-core/compare/v1.1.0-next.6...v1.1.0-next.7) (2026-07-14)
+
+
+### Bug Fixes
+
+* Update SDK to 3.x and fix type compatibility ([649ae2d](https://github.com/inneropen/marvin-renderers-core/commit/649ae2d960718697d1a65893f20ac2898a79ed32))
+
 # [1.1.0-next.6](https://github.com/inneropen/marvin-renderers-core/compare/v1.1.0-next.5...v1.1.0-next.6) (2026-07-14)
 
 
