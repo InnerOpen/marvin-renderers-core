@@ -1,3 +1,10 @@
+# [1.1.0-next.6](https://github.com/inneropen/marvin-renderers-core/compare/v1.1.0-next.5...v1.1.0-next.6) (2026-07-14)
+
+
+### Features
+
+* Add MARVIN_DEBUG console logging ([6b3d606](https://github.com/inneropen/marvin-renderers-core/commit/6b3d60675e8e0fc4ec247a78c932e66955159653))
+
 # [1.1.0-next.5](https://github.com/inneropen/marvin-renderers-core/compare/v1.1.0-next.4...v1.1.0-next.5) (2026-07-14)
 
 
