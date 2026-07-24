@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import type { RendererEntry } from '../src/logic/types.js';
+import type { EntryTypeInfo, RendererEntry } from '../src/logic/types.js';
 import {
   resolveRendererName,
   resolveRendererRequirement,
@@ -11,23 +11,29 @@ import {
   shouldRenderEntry,
 } from '../src/logic/resolve.js';
 
+/** A minimally-valid published entry — renderers only ever receive this shape. */
 function makeEntry(overrides: Partial<RendererEntry> = {}): RendererEntry {
   return {
-    id: '1',
     title: 'Test Entry',
     slug: 'test-entry',
-    status: 'published',
-    entryTypeId: 'et-1',
-    createdAt: '2026-01-01T00:00:00Z',
-    updatedAt: '2026-01-01T00:00:00Z',
+    entryType: 'page',
+    data: {},
+    collections: [],
+    resources: [],
+    assets: [],
     ...overrides,
   };
+}
+
+/** entryTypeInfo fixture — fills the required flags so tests can vary only what they assert on. */
+function entryTypeInfo(overrides: Partial<EntryTypeInfo> & { slug: string }): EntryTypeInfo {
+  return { publishable: true, submittable: false, routable: true, ...overrides };
 }
 
 describe('resolveRendererName', () => {
   it('returns renderer from entryTypeInfo', () => {
     const entry = makeEntry({
-      entryTypeInfo: { slug: 'article', renderer: 'article' },
+      entryTypeInfo: entryTypeInfo({ slug: 'article', renderer: 'article' }),
     });
     expect(resolveRendererName(entry)).toBe('article');
   });
@@ -38,7 +44,7 @@ describe('resolveRendererName', () => {
 
   it('falls back to "page" when renderer is undefined', () => {
     const entry = makeEntry({
-      entryTypeInfo: { slug: 'custom' },
+      entryTypeInfo: entryTypeInfo({ slug: 'custom' }),
     });
     expect(resolveRendererName(entry)).toBe('page');
   });
@@ -47,7 +53,7 @@ describe('resolveRendererName', () => {
 describe('resolveRendererRequirement', () => {
   it('returns the renderer requirement from entryTypeInfo', () => {
     const entry = makeEntry({
-      entryTypeInfo: { slug: 'faq', renderer: 'faq', package: '@inneropen/marvin-renderers-core', version: '^1.0.0', config: { layout: 'stacked' } },
+      entryTypeInfo: entryTypeInfo({ slug: 'faq', renderer: 'faq', package: '@inneropen/marvin-renderers-core', version: '^1.0.0', config: { layout: 'stacked' } }),
     });
 
     expect(resolveRendererRequirement(entry)).toEqual({
@@ -62,7 +68,7 @@ describe('resolveRendererRequirement', () => {
 describe('resolveRendererConfig', () => {
   it('returns entryTypeInfo config when no overrides', () => {
     const entry = makeEntry({
-      entryTypeInfo: { slug: 'page', config: { layout: 'wide' } },
+      entryTypeInfo: entryTypeInfo({ slug: 'page', config: { layout: 'wide' } }),
     });
     expect(resolveRendererConfig(entry)).toEqual({ layout: 'wide' });
   });
@@ -73,7 +79,7 @@ describe('resolveRendererConfig', () => {
 
   it('merges overrides on top of entry config', () => {
     const entry = makeEntry({
-      entryTypeInfo: { slug: 'page', config: { layout: 'wide', sidebar: true } },
+      entryTypeInfo: entryTypeInfo({ slug: 'page', config: { layout: 'wide', sidebar: true } }),
     });
     const result = resolveRendererConfig(entry, { layout: 'narrow', toc: true });
     expect(result).toEqual({ layout: 'narrow', sidebar: true, toc: true });
@@ -128,6 +134,21 @@ describe('extractField', () => {
   });
 });
 
+/**
+ * `getFeaturedAsset` deliberately tolerates two asset shapes: the canonical
+ * PublishedEntryAsset junction (`{ role, position, asset }`) and a legacy flat asset
+ * carrying `metadata.role`. The fixtures below exercise the legacy flat form, so they
+ * are cast to the declared array type rather than pretending to be canonical.
+ */
+function asLegacyEntryAssets(assets: unknown[]): RendererEntry['assets'] {
+  return assets as RendererEntry['assets'];
+}
+
+/** The resolver passes the matched object straight through, so read `id` off the fixture. */
+function idOf(asset: unknown): string | undefined {
+  return (asset as { id?: string } | undefined)?.id;
+}
+
 describe('getFeaturedAsset', () => {
   const imgAsset = {
     id: 'a1',
@@ -150,19 +171,19 @@ describe('getFeaturedAsset', () => {
 
   it('returns asset with role "featured"', () => {
     const featured = { ...imgAsset, id: 'a2', metadata: { role: 'featured' } };
-    const entry = makeEntry({ assets: [imgAsset, featured] });
-    expect(getFeaturedAsset(entry)?.id).toBe('a2');
+    const entry = makeEntry({ assets: asLegacyEntryAssets([imgAsset, featured]) });
+    expect(idOf(getFeaturedAsset(entry))).toBe('a2');
   });
 
   it('returns asset with role "hero"', () => {
     const hero = { ...imgAsset, id: 'a3', metadata: { role: 'hero' } };
-    const entry = makeEntry({ assets: [imgAsset, hero] });
-    expect(getFeaturedAsset(entry)?.id).toBe('a3');
+    const entry = makeEntry({ assets: asLegacyEntryAssets([imgAsset, hero]) });
+    expect(idOf(getFeaturedAsset(entry))).toBe('a3');
   });
 
   it('falls back to first asset when no role matches', () => {
-    const entry = makeEntry({ assets: [imgAsset] });
-    expect(getFeaturedAsset(entry)?.id).toBe('a1');
+    const entry = makeEntry({ assets: asLegacyEntryAssets([imgAsset]) });
+    expect(idOf(getFeaturedAsset(entry))).toBe('a1');
   });
 
   it('returns undefined when no assets', () => {
@@ -178,14 +199,14 @@ describe('isRoutable', () => {
 
   it('returns true when routable is true', () => {
     const entry = makeEntry({
-      entryTypeInfo: { slug: 'page', routable: true },
+      entryTypeInfo: entryTypeInfo({ slug: 'page', routable: true }),
     });
     expect(isRoutable(entry)).toBe(true);
   });
 
   it('returns false when routable is false', () => {
     const entry = makeEntry({
-      entryTypeInfo: { slug: 'nav', routable: false },
+      entryTypeInfo: entryTypeInfo({ slug: 'nav', routable: false }),
     });
     expect(isRoutable(entry)).toBe(false);
   });

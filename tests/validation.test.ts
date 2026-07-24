@@ -98,7 +98,7 @@ describe('validateRenderers', () => {
     expect(result.total).toBe(3);
     expect(result.covered).toBe(2);
     expect(result.missing).toHaveLength(1);
-    expect(result.missing[0].renderer).toBe('faq');
+    expect(result.missing[0]!.renderer).toBe('faq');
   });
 
   it('handles empty entry types array', () => {

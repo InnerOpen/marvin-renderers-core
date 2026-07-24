@@ -32,9 +32,22 @@ export function resolveRendererConfig(
   return merged;
 }
 
+/**
+ * The entry's field bag, merging `dataJson` under `data` (per-key, `data` wins).
+ *
+ * `data` is a REQUIRED field on a published entry, so the older
+ * `entry.data ?? entry.dataJson` short-circuited on an empty `{}` and never
+ * consulted `dataJson` — making that fallback dead. Merging keeps published
+ * behaviour identical (published entries carry no `dataJson`) while letting a
+ * platform-shaped entry's `dataJson` supply keys `data` doesn't have, matching
+ * how `extractField` already resolves values.
+ */
+function entryData(entry: RendererEntry): Record<string, unknown> {
+  return { ...(entry.dataJson ?? {}), ...(entry.data ?? {}) };
+}
+
 export function extractBody(entry: RendererEntry): string | undefined {
-  const data = entry.data ?? entry.dataJson ?? {};
-  const body = data.body;
+  const body = entryData(entry).body;
   if (typeof body === 'string') return body;
   return entry.contentMarkdown;
 }
@@ -75,7 +88,7 @@ export function isRoutable(entry: RendererEntry): boolean {
 }
 
 export function shouldRenderEntry(entry: RendererEntry, rendererName?: string): boolean {
-  const data = entry.data ?? entry.dataJson ?? {};
+  const data = entryData(entry);
   const flags = [
     rendererName && typeof rendererName === 'string' ? data[rendererName] : undefined,
     data.enabled,
