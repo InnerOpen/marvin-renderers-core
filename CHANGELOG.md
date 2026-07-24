@@ -1,3 +1,10 @@
+# [1.1.0-next.9](https://github.com/inneropen/marvin-renderers-core/compare/v1.1.0-next.8...v1.1.0-next.9) (2026-07-24)
+
+
+### Bug Fixes
+
+* **logic:** revive dead dataJson fallback; typecheck tests; tighten tsconfig ([dc9d65e](https://github.com/inneropen/marvin-renderers-core/commit/dc9d65e06f1d24bcddaad89d6087d44116e6f3a9))
+
 # [1.1.0-next.8](https://github.com/inneropen/marvin-renderers-core/compare/v1.1.0-next.7...v1.1.0-next.8) (2026-07-14)
 
 
